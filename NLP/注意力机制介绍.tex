@@ -1,0 +1,33 @@
+\documentclass{ctexart}
+\title{注意力机制及相关说明}
+\author{DemonPan}
+\date{2019-12-19}
+\usepackage{indentfirst}
+\begin{document}
+\maketitle
+当用神经网络来处理大量的输入信息时，也可以借鉴人脑的注意力机制，只 选择一些关键的信息输入进行处理，来提高神经网络的效率。
+按照认知神经学中的注意力，可以总体上分为两类：\cite{ref1}\par
+聚焦式（focus）注意力：自上而下的有意识的注意力，主动注意——是指有预定目的、依赖任务的、主动有意识地聚焦于某一对象的注意力；\par
+显著性（saliency-based）注意力：自下而上的有意识的注意力，被动注意——基于显著性的注意力是由外界刺激驱动的注意，不需要主动干预，
+也和任务无关；可以将max-pooling和门控（gating）机制来近似地看作是自下而上的基于显著性的注意力机制。\par
+在人工神经网络中，注意力机制一般就特指聚焦式注意力。\par
+注意力机制的理解。\par
+在给定输入$\mathbf{X}={{\mathbf{x_1},\mathbf{x_2},\cdots,\mathbf{x_n}}}$的情况下，用$\mathbf{q}$表示当前任务，用$Attention(\mathbf{q},\mathbf{X})$表示$\mathbf{q}$对$\mathbf{X}$各元素的注意力，则
+\begin{equation}Attention(\mathbf{q},\mathbf{X}) = softmax(score(\mathbf{q},\mathbf{X})) = [\alpha_1,\alpha_2,\cdots,\alpha_N]\end{equation}
+$score$的计算方式有多种，如：
+\begin{equation}score(\mathbf{q},\mathbf{x_i}) = \mathbf{q} \cdot \mathbf{x_i}\end{equation}\footnote{点积模型，点击模型和加法模型效果差不多，但点积模型可以
+更好的利用矩阵的乘积，从而是计算效率更高}
+\begin{equation}score(\mathbf{q},\mathbf{x_i}) = \frac{\mathbf{q} \cdot \mathbf{x_i}}{\sqrt{d_x}}\end{equation}\footnote{缩放点积模型：维度较大的点积会使得方差较大，从而导致softmax函数梯度比较小
+不利于优化}
+\begin{equation}score(\mathbf{q},\mathbf{x_i}) = \mathbf{W}\mathbf{q} + \mathbf{U}\mathbf{x_i}\end{equation}\footnote{加法模型：与点击模型效果区别不大}
+用softmax求$score$的值，是为了让score值都为正值，并且使其分数之和为1的概率分布。\par
+想象一种注意力场景。比如雪地上有一颗树，眼睛看到了 雪地也看到了树，但我们更多的注意到了树（当然雪地也看到了），可是眼睛只能在同一时间将一种信号送给大脑，那么这种信号该如何表示呢？\\
+有了任务$\mathbf{q}$对$\mathbf{X}$不同的注意力，现在要做的是把对不同注意力的影响，融合成一种最终注意到的结果。用$r(\mathbf{X},\mathbf{q})$表示最终结果，则
+%\begin{equation}r(\mathbf{X},\mathbf{q}) = \sum_{i=1}{N}softmax(score(\mathbf{x_i},\mathbf{q}))\\
+%=\sum_{i=1}{i=N}\frac{e^score(mathbf{x_i},\mathbf{q})}{}\end{equation}
+\begin{equation}r(\mathbf{X},\mathbf{q}) = \sum_{i=1}^{N}\alpha_i\mathbf{x_i}\end{equation}
+%\renewcommand\refname{参考文献} 
+\bibliography{注意力机制介绍}
+\bibliographystyle{plain} 
+\pagestyle{plain}
+\end{document}
