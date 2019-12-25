@@ -1,0 +1,7 @@
+BERT中的位置编码是训练出来的，和transformer不同。
+在multiattention后，bert有一个全链接层，然后resudual+laynerNormal，原论文中没有。
+BERT的输入只有TokenEmbeddings(input_id),(Segment Embeddings)segment_id,Positions Embeddings(mask_id)
+优缺点：
+BERT算法还有很大的优化空间，例如我们在Transformer中讲的如何让模型有捕捉Token序列关系的能力，而不是简单依靠位置嵌入。
+BERT的训练在目前的计算资源下很难完成
+BERT在MLM任务中的mask策略对真实的单词产生偏见。目前还未显示这种偏见对训练的影响。
