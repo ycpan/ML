@@ -1,2 +1,0 @@
-https://senliuy.gitbooks.io/advanced-deep-learning/content/di-yi-zhang-ff1a-jing-dian-wang-luo.html
-条件随机场（CRF）和隐马尔科夫模型（HMM）最大区别在哪里 https://www.zhihu.com/question/53458773/answer/306485500
