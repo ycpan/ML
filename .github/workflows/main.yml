@@ -20,21 +20,19 @@ jobs:
 
       - name: 配置 Git 环境
         env:
-          ACTION_DEPLOY_KEY: ${{secrets.home_laptop}}
+          ACTION_DEPLOY_KEY: ${{secrets.ACTION_DEPLOY_KEY}}
         run: |
           mkdir -p ~/.ssh/
-          echo "$home_laptop" > ~/.ssh/id_rsa
+          echo "$ACTION_DEPLOY_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan github.com >> ~/.ssh/known_hosts
           git config --global user.name "ycpan"
           git config --global user.email "930101702@qq.com"
-
       - name: 安装 Hexo CI
         run: |
           export TZ='Asia/Shanghai'
           npm i -g hexo-cli
           npm i
-
       - name: 安装插件
         run: |
           npm install hexo-renderer-pug --save
@@ -45,7 +43,6 @@ jobs:
           npm install hexo-generator-feed --save
           npm install hexo-abbrlink --save
           npm install hexo-wordcount --save
-
       - name: 部署博客
         run: |
           rm -rf .deploy_git
