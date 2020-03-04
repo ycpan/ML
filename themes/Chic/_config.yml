@@ -1,5 +1,5 @@
 # Header
-navname: Bentham's Blog
+navname: DemonPan'blog 
 
 # navigatior items
 nav:
@@ -12,7 +12,8 @@ nav:
 favicon: /favicon.ico
 
 # Profile
-nickname: Jeremy Bentham
+nickname: Demon Pan
+
 
 ### this variable is MarkDown form.
 description: Lorem ipsum dolor sit amet, **consectetur adipiscing elit.** <br>Fusce eget urna vitae velit *eleifend interdum at ac* nisi.
@@ -23,7 +24,7 @@ avatar: /image/avatar.jpeg
 ## Complete url after key words.
 ## Unused key can be commented out.
 links:
-  Blog: /archives
+#  Blog: /archives
 #  Category:
 #  Tags: 
 #  Link:
