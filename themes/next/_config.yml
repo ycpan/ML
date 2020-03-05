@@ -179,7 +179,7 @@ avatar:
   #url: /images/avatar.gif
   url: /images/avatar.jpeg
   # If true, the avatar will be dispalyed in circle.
-  rounded: false
+  rounded: true
   # If true, the avatar will be rotated with the cursor.
   rotated: false
 
