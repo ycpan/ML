@@ -62,6 +62,7 @@ footer:
     color: "#808080"
 
   # If not defined, `author` from Hexo `_config.yml` will be used.
+    author: DemonPan
   copyright:
 
   powered:
@@ -176,7 +177,8 @@ sidebar:
 # Sidebar Avatar
 avatar:
   # Replace the default image and set the url here.
-  url: #/images/avatar.gif
+  #url: /images/avatar.gif
+  url: /images/1.png
   # If true, the avatar will be dispalyed in circle.
   rounded: false
   # If true, the avatar will be rotated with the cursor.
@@ -213,8 +215,8 @@ links_settings:
   # Available values: block | inline
   layout: block
 
-links:
-  Title: http://yoursite.com
+#links:
+  #Title: http://yoursite.com
 
 # Table of Contents in the Sidebar
 # Front-matter variable (unsupport wrap expand_all).
