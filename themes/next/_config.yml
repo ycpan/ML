@@ -106,12 +106,12 @@ creative_commons:
 
 # Schemes
 #scheme: Muse
-scheme: Mist
+#scheme: Mist
 #scheme: Pisces
-#scheme: Gemini
+scheme: Gemini
 
 # Dark Mode
-darkmode: true
+darkmode: false
 
 
 # ---------------------------------------------------------------
@@ -129,14 +129,14 @@ menu:
   tags: /tags/ || tags
   categories: /categories/ || th
   archives: /archives/ || archive
-  schedule: /schedule/ || calendar
+  #schedule: /schedule/ || calendar
   sitemap: /sitemap.xml || sitemap
   commonweal: /404/ || heartbeat
-  Docs:
-    default: /docs/ || book
-    Third Party Services:
-      default: /third-party-services/ || plug
-      Algolia Search: /algolia-search/ || adn
+  #Docs:
+  #  default: /docs/ || book
+  #  Third Party Services:
+  #    default: /third-party-services/ || plug
+  #    Algolia Search: /algolia-search/ || adn
 
 
 # Enable / Disable menu icons / item badges.
