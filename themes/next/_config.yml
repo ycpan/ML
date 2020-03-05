@@ -62,7 +62,6 @@ footer:
     color: "#808080"
 
   # If not defined, `author` from Hexo `_config.yml` will be used.
-    author: DemonPan
   copyright:
 
   powered:
@@ -107,8 +106,8 @@ creative_commons:
 # Schemes
 #scheme: Muse
 #scheme: Mist
-#scheme: Pisces
-scheme: Gemini
+scheme: Pisces
+#scheme: Gemini
 
 # Dark Mode
 darkmode: false
