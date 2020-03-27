@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>DemonPan&#39;s blog</title>
+  
+  
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://yoursite.com/"/>
+  <updated>2020-03-27T06:51:15.022Z</updated>
+  <id>http://yoursite.com/</id>
+  
+  <author>
+    <name>ycpan</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>一文读懂自注意力机制</title>
+    <link href="http://yoursite.com/2020/03/26/%E4%B8%80%E6%96%87%E8%AF%BB%E6%87%82%E8%87%AA%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6/"/>
+    <id>http://yoursite.com/2020/03/26/%E4%B8%80%E6%96%87%E8%AF%BB%E6%87%82%E8%87%AA%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6/</id>
+    <published>2020-03-26T00:46:08.000Z</published>
+    <updated>2020-03-27T06:51:15.022Z</updated>
+    
+    <content type="html"><![CDATA[<p>完全图解——8 步掌握 self-attention</p><ul><li><p>准备输入</p></li><li><p>初始化权重</p></li><li><p>推导 key, query 和 value</p></li><li><p>计算输入 1 的注意力得分</p></li><li><p>计算 softmax</p></li><li><p>将分数与值相乘</p></li><li><p>将权重值相加，得到输出 1</p></li><li><p>对输入 2 和输入 3 重复步骤 4-7</p></li></ul><blockquote><p>注：实际上，数学运算是矢量化的,，即所有的输入都一起经历数学运算。在后面的代码部分中可以看到这一点。</p></blockquote><p><strong>步骤 1：准备输入</strong></p><p><img src="https://mmbiz.qpic.cn/mmbiz_png/UicQ7HgWiaUb25aK6bdwziaLcxLWgQXoreOQicZClJhuJ5AVCUIjBpDK60ZYWO9ylicvj9ZFiclzEl9vicnkSXVUHReCg/640?wx_fmt=png" alt=""></p><p>图 1.1: 准备输入</p><p>在本教程中，我们从 3 个输入开始，每个输入的维数为 4。</p><p><img src="https://mmbiz.qpic.cn/mmbiz_png/UicQ7HgWiaUb25aK6bdwziaLcxLWgQXoreOdOgaWXsVia1Bp223LjovwOXaZZRWVQChSRbB7pjicBIz3fc4H1F7MNibw/640?wx_fmt=png" alt=""></p><p><strong>步骤 2：初始化权重</strong></p><p>每个输入必须有三个表示 (见下图)。这些表示称为<strong>键 (key，橙色)</strong>、<strong>查询 (query，红色)</strong> 和<strong>值 (value，紫色)</strong>。在本例中，我们假设这些表示的维数是 3。因为每个输入的维数都是 4，这意味着每组权重必须是 4×3。</p><blockquote><p>注：</p><p>稍后我们将看到 value 的维度也是输出的维度。</p></blockquote><p><img src="https://mmbiz.qpic.cn/mmbiz_gif/UicQ7HgWiaUb25aK6bdwziaLcxLWgQXoreOQJv4gzSDiajGlq4KAW4tSatyNkjLgiaHaiaSLJgCwJfr8ANrNRia8edjfA/640?wx_fmt=gif" alt=""></p><p>图 1.2：从每个输入得出键、查询和值的表示</p><p>为了得到这些表示，每个输入 (绿色) 都乘以一组键的权重、一组查询的权重，以及一组值的权重。在本示例中，我们将三组权重 “初始化” 如下。</p><p><strong>key</strong> 的权重:</p><p><img src="https://mmbiz.qpic.cn/mmbiz_png/UicQ7HgWiaUb25aK6bdwziaLcxLWgQXoreOlxDFr3SpuUIic5NqPmyN9ybKJEKbxiciaCcSwRg4qZjmmpyRI9ibx6ERibA/640?wx_fmt=png" alt=""></p><p><strong>query</strong> 的权重：</p><p><img src="https://mmbiz.qpic.cn/mmbiz_png/UicQ7HgWiaUb25aK6bdwziaLcxLWgQXoreOuNgO0BwEyicxoZiaibeTwp0sO8jsmnx1m0efwAHkzbjvVZibsQConDBUVA/640?wx_fmt=png" alt=""></p><p><strong>value</strong> 的权重：</p><p><img src="https://mmbiz.qpic.cn/mmbiz_png/UicQ7HgWiaUb25aK6bdwziaLcxLWgQXoreOdbmVnxIrH2SCicELdDNxPDucDYHLxpq4PhmgtZZP2y3D29LArub6T9g/640?wx_fmt=png" alt=""></p><blockquote><p>注：</p><p>在神经网络设置中，这些权重通常是很小的数字，使用适当的随机分布 (例如高斯、Xavier 和 Kaiming 分布) 进行随机初始化。</p></blockquote><p><strong>步骤 3：推导键、查询和值</strong></p><p>现在，我们有了三组权重，让我们实际获取每个输入的键、查询和值表示。</p><p>输入 1 的键表示:</p><p><img src="https://mmbiz.qpic.cn/mmbiz_png/UicQ7HgWiaUb25aK6bdwziaLcxLWgQXoreOF2Lrx1lnZib0wjIicP0ib3eic2L1UnCiby90IG8j4M73zLtrCSLBy69h0bQ/640?wx_fmt=png" alt=""></p><p>使用相同的权重集合得到输入 2 的键表示:</p><p><img src="https://mmbiz.qpic.cn/mmbiz_png/UicQ7HgWiaUb25aK6bdwziaLcxLWgQXoreO8woaT0sjLcicia6HibF3bUzbWOKhxBqYTteibSQiaTtPibXIs4z0V8wJ8NGw/640?wx_fmt=png" alt=""></p><p>使用相同的权重集合得到输入 3 的键表示:</p><p><img src="https://mmbiz.qpic.cn/mmbiz_png/UicQ7HgWiaUb25aK6bdwziaLcxLWgQXoreO6oNztyA7IicU6KWd1RbTwXHF8k7x6T2Je1UGrwLWFSPCfCzMFzciao3Q/640?wx_fmt=png" alt=""></p><p>一种更快的方法是对上述操作进行矢量化：</p><p><img src="https://mmbiz.qpic.cn/mmbiz_png/UicQ7HgWiaUb25aK6bdwziaLcxLWgQXoreOJEicibRaGcX8W5aauEiavoKlnhfv0Tiatw650FQbhp7we6kIOdrysXp7ibg/640?wx_fmt=png" alt=""></p><p><img src="https://mmbiz.qpic.cn/mmbiz_gif/UicQ7HgWiaUb25aK6bdwziaLcxLWgQXoreOS7ianhBUubnTDyS25ToRoH0xMWMbjOaqnReWLsPwGxNPcuo2MTVj0dw/640?wx_fmt=gif" alt=""></p><p>图 1.3a：从每个输入推导出键表示</p><p>同样的方法，可以获取每个输入的值表示：</p><p><img src="https://mmbiz.qpic.cn/mmbiz_png/UicQ7HgWiaUb25aK6bdwziaLcxLWgQXoreOOsMEnZG70eOSgRUQTq542vkKKPMcO1u39L1CPcjDiaD8iakHV99ecjEg/640?wx_fmt=png" alt=""></p><p><img src="https://mmbiz.qpic.cn/mmbiz_gif/UicQ7HgWiaUb25aK6bdwziaLcxLWgQXoreOibDYk76mbtTxJnQGQClwohE3r9IJFiaVHSab2AYL7FDkz0U1hxXY7bWA/640?wx_fmt=gif" alt=""></p><p>图 1.3b：从每个输入推导出值表示</p><p>最后，得到查询表示</p><p><img src="https://mmbiz.qpic.cn/mmbiz_png/UicQ7HgWiaUb25aK6bdwziaLcxLWgQXoreO7tlj29GNMukWZPbh1yIS2MEnqhEsp3Of0Ls16AiaFtMEc2BX8EIcPow/640?wx_fmt=png" alt=""></p><p><img src="https://mmbiz.qpic.cn/mmbiz_gif/UicQ7HgWiaUb25aK6bdwziaLcxLWgQXoreO6Uzian7wqHicJIK32uWS1L0vt2d5PaHC8jFXvSG8Lq4jvYntIDf2ebZQ/640?wx_fmt=gif" alt=""></p><p>图 1.3b：从每个输入推导出查询表示</p><blockquote><p>注：</p><p>在实践中，偏差向量 (bias vector) 可以添加到矩阵乘法的乘积。</p></blockquote><p><strong>步骤 4：计算输入 1 的 attention scores</strong></p><p><img src="https://mmbiz.qpic.cn/mmbiz_gif/UicQ7HgWiaUb25aK6bdwziaLcxLWgQXoreOibKCiaxvNpkD7ia1SKrmMcNW6IrkZpib14h14XT9Smb1KJdCbj2CEjUS4w/640?wx_fmt=gif" alt=""></p><p>图 1.4：从查询 1 中计算注意力得分 (蓝色)</p><p>为了获得注意力得分，我们首先在输入 1 的<strong>查询</strong> (红色) 和所有<strong>键</strong> (橙色) 之间取一个点积。因为有 3 个<strong>键</strong>表示 (因为有 3 个输入)，我们得到 3 个<strong>注意力得分</strong> (蓝色)。</p><p><img src="https://mmbiz.qpic.cn/mmbiz_png/UicQ7HgWiaUb25aK6bdwziaLcxLWgQXoreOT5tfNkseTaNomSSXAGdGZ5xO6HkD3LbUDcibbVp7rTFOX8FUVu5J0LQ/640?wx_fmt=png" alt=""></p><blockquote><p>注：现在只使用 Input 1 中的查询。稍后，我们将对其他查询重复相同的步骤。</p></blockquote><p><strong>步骤 5：计算 softmax</strong>  </p><p><img src="https://mmbiz.qpic.cn/mmbiz_gif/UicQ7HgWiaUb25aK6bdwziaLcxLWgQXoreONMRIiaqibgnjj3Oibu0nTmlZBtMePQRf5bU7ibpcTBddyeMIE6BYpibPDicA/640?wx_fmt=gif" alt=""></p><p>图 1.5：Softmax 注意力评分 (蓝色)</p><p>在所有注意力得分中使用 softmax(蓝色)。</p><p><img src="https://mmbiz.qpic.cn/mmbiz_png/UicQ7HgWiaUb25aK6bdwziaLcxLWgQXoreOftksofiaZk9qXewG8yWgJ9KSlunDboAR29NEdFU8d7F9TPebyS9n5Mg/640?wx_fmt=png" alt=""></p><p><strong>步骤 6：将得分和值相乘</strong></p><p><img src="https://mmbiz.qpic.cn/mmbiz_gif/UicQ7HgWiaUb25aK6bdwziaLcxLWgQXoreOQu5EK4SGhENiayrMOBwjWw6ceshT6iaz1elhmYRicupG3ClNFOFGxv2fg/640?wx_fmt=gif" alt=""></p><p>图 1.6：由值 (紫色) 和分数 (蓝色) 的相乘推导出加权值表示(黄色)</p><p>每个输入的 softmaxed attention 分数 (蓝色) 乘以相应的值(紫色)。结果得到 3 个对齐向量(黄色)。在本教程中，我们将它们称为<strong>加权值</strong>。</p><p><img src="https://mmbiz.qpic.cn/mmbiz_png/UicQ7HgWiaUb25aK6bdwziaLcxLWgQXoreOXnlVqpExicgXGxtibEictO6Mws7GH7Q8mWsZ1MJNcoibzMJsh3zAB5vBZQ/640?wx_fmt=png" alt=""></p><p><strong>步骤 7：将加权值相加得到输出 1</strong></p><p><img src="https://mmbiz.qpic.cn/mmbiz_gif/UicQ7HgWiaUb25aK6bdwziaLcxLWgQXoreObqqvCsFCIyRnGSU9M5TRSMZDpM4LFh2nYkEc5v4N7RdL2zOtC6sgJg/640?wx_fmt=gif" alt=""></p><p>图 1.7：将所有加权值 (黄色) 相加，得到输出 1(深绿色)  </p><p>将所有加权值 (黄色) 按元素指向求和：</p><p><img src="https://mmbiz.qpic.cn/mmbiz_png/UicQ7HgWiaUb25aK6bdwziaLcxLWgQXoreOuvtJYwdkECBFu3RsJIic0BJliaHwbcWyugs42pAia1V1KSuCGCsPOJ8nA/640?wx_fmt=png" alt=""></p><p>结果向量 <a href="深绿色">2.0,7.0,1.5</a> 是输出 1，该输出基于输入 1 与所有其他键 (包括它自己) 进行交互的查询表示。</p><p><strong>步骤 8：重复输入 2 和输入 3</strong></p><p>现在，我们已经完成了输出 1，我们对输出 2 和输出 3 重复步骤 4 到 7。接下来相信你可以自己操作了👍🏼。</p><p><img src="https://mmbiz.qpic.cn/mmbiz_gif/UicQ7HgWiaUb25aK6bdwziaLcxLWgQXoreOnMlkEGZ3AUO7Rb0Ag7sguuEe1uddF5DJZAnJtuVBGZnurMzia3SbuGw/640?wx_fmt=gif" alt=""></p><p>图 1.8：对输入 2 和输入 3 重复前面的步骤</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;完全图解——8 步掌握 self-attention&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;准备输入&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;初始化权重&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;推导 key, query 和 value&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;计算输入 1 的注意
+      
+    
+    </summary>
+    
+    
+      <category term="transformer" scheme="http://yoursite.com/categories/transformer/"/>
+    
+    
+      <category term="nlp" scheme="http://yoursite.com/tags/nlp/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>nlp_intervies</title>
+    <link href="http://yoursite.com/2020/03/04/nlp-intervies/"/>
+    <id>http://yoursite.com/2020/03/04/nlp-intervies/</id>
+    <published>2020-03-04T16:46:08.000Z</published>
+    <updated>2020-03-04T16:47:56.784Z</updated>
+    
+    <content type="html"><![CDATA[<p>nlp常见面试</p><ol><li>对HMM ，CRF的理解， CRF的损失函数什么，维特比算法的过程<ol start="5"><li>手写一个tfids</li><li>word2vec的CBOW与SkipGram模型及两种训练方式(负采样\层级softmax)， 两种训练方式的区别和应用场景,</li><li>word2vec和fasttext的区别， 训练word2vec的有哪些重要参数</li><li>LSTM的单元结构图和6个公式要记住</li><li>有几种Attention, Attention和self-Attention是具体怎么实现的，对应什么场景</li><li>BERT的模型架构，多少层，什么任务适合bert，什么任务不适合，应用在你写的项目改怎么做</li><li>tensorflow手写一个卷积代码， BILSTM + CRF模型的原理，记住常用基础api(比如jieba添加默认词典api，分词api)</li><li>问项目阶段， 会问数据集怎么得到、模型的训练、怎么部署、项目人员周期，开发中出现问题怎么解决等</li></ol></li></ol>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;nlp常见面试&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;对HMM ，CRF的理解， CRF的损失函数什么，维特比算法的过程&lt;ol start=&quot;5&quot;&gt;
+&lt;li&gt;手写一个tfids&lt;/li&gt;
+&lt;li&gt;word2vec的CBOW与SkipGram模型及两种训练方式(负采样\层级softmax
+      
+    
+    </summary>
+    
+    
+      <category term="inteview" scheme="http://yoursite.com/categories/inteview/"/>
+    
+    
+      <category term="nlp" scheme="http://yoursite.com/tags/nlp/"/>
+    
+  </entry>
+  
+</feed>
